@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SEP 2019</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Materialize Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+  </head>
+  <style>
+
+    input[type=range]::-webkit-slider-thumb {
+      background-color: white;
+    }
+    input[type=range]::-ms-thumb {
+      background-color: white;
+    }
+    input[type=range] {
+      padding: 0px;
+      margin: 0px;
+      color: #78909c;
+    }
+    
+    ::-webkit-scrollbar { 
+        display: none; 
+    }
+    /***** These are to edit the thumb and the text inside the thumb *****/
+    input[type=range] + .thumb {
+      background-color: white;
+    }
+    input[type=range] + .thumb.active .value {
+      color: #78909c;
+      font-size: 10px;
+    }
+    html,body{
+       height:100%;
+       overflow-y: auto;
+    }
+  </style>
+  
+  <body class="blue-grey darken-2">
+    <!--Barra lateral-->
+    <ul id="slide_out_menu" class="sidenav" style="overflow-y: auto; overflow-x: none;">
+      <li><a style="font-size 30px;"><i class="material-icons">blur_circular</i>SEP 2K19</a></li>
+      <li><div class="divider"></div></li>
+      <li><a class="subheader">Visualização</a></li>
+      <li>
+        <a class="waves-effect teal-text" id="options_view_fcfs" color="teal" status="show" href="#!" onclick="controle_visivel(this,'fcfs')">
+          <i id="options_view_fcfs_icon" class="material-icons teal-text">remove_red_eye</i>
+          First Serverd
+        </a>
+      </li>
+      <li>
+        <a class="waves-effect blue-text" id="options_view_sjf" color="blue" status="show" href="#!" onclick="controle_visivel(this,'sjf')">
+          <i id="options_view_sjf_icon" class="material-icons blue-text">remove_red_eye</i>
+          Shortest Job First
+        </a>
+      </li>
+      <li>
+        <a class="waves-effect orange-text" id="options_view_rr" color="orange" status="show" href="#!" onclick="controle_visivel(this,'rr')">
+          <i id="options_view_rr_icon" class="material-icons orange-text">remove_red_eye</i>
+          Round Robin
+        </a>
+      </li>
+      <li><div class="divider"></div></li>
+      <div id="sidebar_add_processos">
+        <li><a class="subheader">Adicionar Processo</a></li>
+        <!--descricao-->
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="add_processo_descricao" type="text" class="validate">
+            <label for="inp_descricao">Descrição</label>
+          </div>
+        </div>
+        <!--clock_entrada-->
+        <div class="row">
+          <div class="input-field col s12">
+            <input type="number" id="add_clock_entrada" class="validate">
+            <label for="inp_clock_entrada">Clock de entrada</label>
+          </div>
+        </div>
+        <!--numero_clocks-->
+        <div class="row">
+          <div class="input-field col s12">
+            <input type="number" id="add_clocks_totais" class="validate">
+            <label for="inp_dnumero_clocks">Número de clocks</label>
+          </div>
+        </div>
+        <!--adicionar-->
+        <div class="row center-align">
+          <div class="input-field col s12">
+            <button class="waves-effect waves-light btn blue-grey lighten-1" onclick="adicionar_processo()"><i class="material-icons left">add</i>Adicionar</button>
+          </div>
+        </div>
+        <li><div class="divider"></div></li>
+        <li><a class="subheader">Submeter arquivo</a></li>
+        <!--submeter arquivo-->
+        <div class="row center-align">
+          <div class="input-field col s12">
+						<input type="file" style="display: none;" id="input_file">
+            <button class="waves-effect waves-light btn blue-grey lighten-1" onclick="$('#input_file').trigger('click');"><i class="material-icons left">attach_file</i>Enviar arquivo</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <div class="container">
+         Nicolas P. Bortoluzzi<br>Iago Borba<br>João de Lira
+        <a class="right">© 2019 FURG</a>
+        </div>
+      </div>
+      <br>
+      <br>
+      <br>
+    </ul>
+    <!--Conteúdo-->
+    <div style="position: absolute;top: 10px;z-index: 10;">
+      <div class="row" style="padding-top: 10px;">
+        <div class="col s12" style="position: fixed;">
+          <a href="#" data-target="slide_out_menu" class="waves-effect sidenav-trigger btn blue-grey lighten-1"><i class="material-icons left">menu</i> Menu</a>
+        </div>
+      </div>
+      <div class="row" style="padding-top: 130px;" id="fcfs">
+        <div class="col s2" style="position: fixed;">
+          <center>
+            <div class="card white tru">
+              <ul>
+                <li style="padding: 2%;" class="teal white-text  truncate">FCFS</li>
+                <li class="truncate">
+                  <b class="teal-text" id="lbl_fcfs_total">-</b><br>Processos concluídos
+                </li>
+                <li class="truncate">
+                  <b class="teal-text" id="lbl_fcfs_process">-</b><br>Processo atual
+                </li>
+              </ul>
+            </div>
+          </center>
+        </div>
+      </div>
+      <div class="row" style="padding-top: 130px;" id="sjf">
+        <div class="col s2" style="position: fixed;">
+          <center>
+            <div class="card white">
+              <ul>
+                <li style="padding: 2%;" class="blue white-text truncatet">SJF</li>
+                <li class="truncate">
+                  <b class="blue-text" id="lbl_sjf_total">-</b><br>Processos concluídos
+                </li>
+                <li class="truncate">
+                  <b class="blue-text" id="lbl_sjf_process">-</b><br>Processo atual
+                </li>
+              </ul>
+            </div>
+          </center>
+        </div>
+      </div>
+      <div class="row" style="padding-top: 130px;" id="rr">
+        <div class="col s2" style="position: fixed;">
+          <center>
+            <div class="card white">
+              <ul class="padding-top: 10px;padding-bottom: 10px;">
+                <li style="padding: 2%;" class="orange white-text truncate">RR</li>
+                <li class="truncate">
+                  <b class="orange-text" id="lbl_rr_total">-</b><br>Processos concluídos
+                </li>
+                <li class="truncate">
+                  <b class="orange-text" id="lbl_rr_process">-</b><br>Processo atual
+                </li>
+              </ul>
+            </div>
+          </center>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container">
+      <center>
+        <center><h5 class="blue-grey-text text-darken-4">Em execução</h5></center>
+        <br>
+      </center>
+      <div class="row blue-grey darken-3" id="div_processos_executando" style="min-height:240px;"></div>
+      <center>
+        <center><h5 class="blue-grey-text text-darken-4">Concluídos</h5></center>
+        <br>
+      </center>
+      <div class="row blue-grey darken-3" id="div_processos_concluido" style="min-height:240px;"></div>
+      <center>
+        <center><h5 class="blue-grey-text text-darken-4">Pendentes</h5></center>
+        <br>
+      </center>
+      <div class="row  blue-grey darken-3" id="div_processos" style="margin-bottom: 300px; min-height:240px;"></div>
+    </div>
+    <!--Rodapé-->
+    <footer class="page-footer blue-grey lighten-1" id="footer" style="position: fixed; bottom: 0px; width:100%; padding-top: 0px; display: none;">
+          <div class="container">
+            <br>
+            <div class="row" id="footer_begin">
+              <div class="col s12 m12 l12 center-align">
+                <button class="btn waves-effect waves-ligth green accent btn-large" onclick="gerarSimulacao()">
+                  <i class="material-icons left">av_timer</i>Gerar simulação</button>
+              </div>
+            </div>
+            <div class="row" id="footer_player" style="display: none;">
+              <div class="col s12 m12 l12 center-align">
+                <p class="range-field">
+                  <input class="teal" type="range" id="range_field" onchange="time.mudar_tempo(this)" min="0" value="0" max="0">
+                  <!--<input type="number" id="range_field" onchange="time.mudar_tempo(this)" min="0" value="0" max="0">-->
+                </p>
+                <i class="left card-title white-text" id="atual_range">0</i>
+                <i class="right card-title white-text" id="max_range">0</i>
+                <button id="player_btn_bck" class="waves-effect waves-light btn-small blue-grey lighten-1" onclick="time.mudar_tempo(null,-10)">
+                  <i class="material-icons">fast_rewind</i>
+                </button>
+                <button id="player_btn_play" class="waves-effect waves-light btn-small blue-grey lighten-1" onclick="time.change_status()">
+                  <i class="material-icons">play_arrow</i>
+                </button>
+                <button id="player_btn_fwd" class="waves-effect waves-light btn-small blue-grey lighten-1" onclick="time.mudar_tempo(null,10)">
+                  <i class="material-icons">fast_forward</i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </footer>
+    <!-- Materialize - Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- JQUERY -->
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+    <script src="helpers.js"></script>
+    <script src="classes.js"></script>
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems);
+      });
+    </script>
+  </body>
+</html>

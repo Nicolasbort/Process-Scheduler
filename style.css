@@ -1,0 +1,20 @@
+#toast-container {
+  right: auto !important;
+  top: 5%;
+  left: 5%;
+}
+
+.switch label input[type=checkbox]:checked+.lever.orange-lever {
+  background-color: #ffcc33;
+}
+
+.switch label input[type=checkbox]:checked+.lever.orange-lever:after {
+  background-color: #f83;
+}
+
+.switch label input[type=checkbox]:checked+.lever.blue-lever:after {
+    background-color: #1770F3 !important;
+}
+.switch label input[type=checkbox]:checked+.lever.blue-lever {
+    background-color: #2196F3 !important;
+}
