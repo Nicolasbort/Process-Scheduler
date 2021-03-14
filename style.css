@@ -18,3 +18,32 @@
 .switch label input[type=checkbox]:checked+.lever.blue-lever {
     background-color: #2196F3 !important;
 }
+
+
+input[type=range]::-webkit-slider-thumb {
+  background-color: white;
+}
+input[type=range]::-ms-thumb {
+  background-color: white;
+}
+input[type=range] {
+  padding: 0px;
+  margin: 0px;
+  color: #78909c;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+/***** These are to edit the thumb and the text inside the thumb *****/
+input[type=range] + .thumb {
+  background-color: white;
+}
+input[type=range] + .thumb.active .value {
+  color: #78909c;
+  font-size: 10px;
+}
+html,body{
+   height:100%;
+   overflow-y: auto;
+}
